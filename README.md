@@ -4,7 +4,7 @@ Matte graphite, molten copper, and brushed-steel visual identity for [Pi](https:
 
 Pi Forge bundles a `forge` theme with a small Forge-gated atmosphere extension. It is a visual package only: no prompt templates, no custom tools, no model changes, no thinking-level changes, and no workflow changes.
 
-https://raw.githubusercontent.com/BareTread/pi-forge/main/assets/preview.mp4
+![Pi Forge preview](https://raw.githubusercontent.com/BareTread/pi-forge/main/assets/preview.png)
 
 ## What You Get
 
@@ -86,7 +86,7 @@ It does **not** include:
   "pi": {
     "extensions": ["./extensions"],
     "themes": ["./themes"],
-    "video": "https://raw.githubusercontent.com/BareTread/pi-forge/main/assets/preview.mp4"
+    "image": "https://raw.githubusercontent.com/BareTread/pi-forge/main/assets/preview.png"
   }
 }
 ```

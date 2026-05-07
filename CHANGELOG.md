@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.1
+
+- Switch Pi gallery metadata from MP4 video to PNG image preview for broader package-detail compatibility.
+- Keep MP4 demo asset in the package for manual viewing.
+
 ## 0.1.0
 
 - Add `forge` Pi theme.
