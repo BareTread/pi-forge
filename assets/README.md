@@ -1,18 +1,15 @@
 # Assets
 
-Add public gallery preview here before release:
+`preview.mp4` is the Pi package gallery preview video.
 
-- `preview.png` for static Pi package gallery preview, or
-- `demo.mp4` for hover video preview.
-
-Then add one public URL to `package.json`:
+The package manifest points Pi at the raw GitHub URL:
 
 ```json
 {
   "pi": {
-    "image": "https://raw.githubusercontent.com/BareTread/pi-forge/main/assets/preview.png"
+    "video": "https://raw.githubusercontent.com/BareTread/pi-forge/main/assets/preview.mp4"
   }
 }
 ```
 
-Pi gallery supports PNG, JPEG, GIF, WebP, and MP4. Video takes precedence over image.
+Pi gallery supports PNG, JPEG, GIF, WebP, and MP4. Video takes precedence over image when both are set.

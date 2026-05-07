@@ -6,4 +6,5 @@
 - Add Forge-gated visual atmosphere extension.
 - Add custom header, diamond/spark working pulse, title pulse, and `tempering…` collapsed-thinking label.
 - Add `/forge-atmosphere [on|off]` command.
+- Add MP4 gallery preview metadata.
 - Keep footer, prompts, tools, model settings, and workflow untouched.

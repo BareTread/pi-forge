@@ -87,12 +87,13 @@ Pi packages load resources from `package.json` under the `pi` key. This package 
 {
   "pi": {
     "extensions": ["./extensions"],
-    "themes": ["./themes"]
+    "themes": ["./themes"],
+    "video": "https://raw.githubusercontent.com/BareTread/pi-forge/main/assets/preview.mp4"
   }
 }
 ```
 
-The Pi package gallery discovers packages with the `pi-package` keyword. Add a PNG/JPEG/GIF/WebP `pi.image` URL or MP4 `pi.video` URL before public gallery polish.
+The Pi package gallery discovers packages with the `pi-package` keyword. Because this package includes both a theme and a visual extension, the gallery lists it as `extension` + `theme`.
 
 ## Uninstall
 

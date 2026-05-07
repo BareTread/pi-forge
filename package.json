@@ -31,7 +31,8 @@
     ],
     "themes": [
       "./themes"
-    ]
+    ],
+    "video": "https://raw.githubusercontent.com/BareTread/pi-forge/main/assets/preview.mp4"
   },
   "peerDependencies": {
     "@mariozechner/pi-coding-agent": "*"
