@@ -1,0 +1,39 @@
+{
+  "name": "@baretread/pi-forge",
+  "version": "0.1.0",
+  "description": "Matte graphite, molten copper Forge theme and visual atmosphere for Pi.",
+  "keywords": [
+    "pi-package",
+    "pi-theme",
+    "pi-extension",
+    "forge"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/BareTread/pi-forge#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BareTread/pi-forge.git"
+  },
+  "bugs": {
+    "url": "https://github.com/BareTread/pi-forge/issues"
+  },
+  "files": [
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "extensions",
+    "themes",
+    "assets"
+  ],
+  "pi": {
+    "extensions": [
+      "./extensions"
+    ],
+    "themes": [
+      "./themes"
+    ]
+  },
+  "peerDependencies": {
+    "@mariozechner/pi-coding-agent": "*"
+  }
+}

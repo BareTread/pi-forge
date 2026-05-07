@@ -1,0 +1,108 @@
+{
+  "$schema": "https://raw.githubusercontent.com/badlogic/pi-mono/main/packages/coding-agent/src/modes/interactive/theme/theme-schema.json",
+  "name": "forge",
+  "vars": {
+    "bgChrome": "#0b0b0c",
+    "bgBody": "#121314",
+    "bgUser": "#36180d",
+    "bgPending": "#151515",
+    "bgSuccess": "#10231b",
+    "bgError": "#301211",
+    "bgCustom": "#0e2030",
+    "bgSelected": "#3a2617",
+
+    "border": "#282117",
+    "borderMuted": "#1a1e22",
+    "borderAccent": "#a0603a",
+
+    "bodyText": "#c3bbb0",
+    "textWhite": "#f5f1ea",
+    "muted": "#9c9488",
+    "dim": "#5e5a53",
+    "dimmer": "#403d38",
+
+    "copperCore": "#d06a32",
+    "copperHot": "#f0975f",
+    "copperDim": "#a0603a",
+    "copperDeep": "#5f321c",
+
+    "wheat": "#d3bf92",
+    "wheatAged": "#ac9972",
+    "wheatDeep": "#715b34",
+
+    "steel": "#95a7ba",
+    "steelText": "#b2bec8",
+    "steelDim": "#475867",
+    "steelBright": "#d2dce4",
+
+    "oxide": "#789d7f",
+    "oxideDeep": "#5c7c61",
+    "hotIron": "#e06a5f",
+    "hotIronDeep": "#81302d"
+  },
+  "colors": {
+    "accent": "copperCore",
+    "border": "border",
+    "borderAccent": "borderAccent",
+    "borderMuted": "borderMuted",
+    "text": "bodyText",
+    "muted": "muted",
+    "dim": "dim",
+    "thinkingText": "muted",
+
+    "selectedBg": "bgSelected",
+    "userMessageBg": "bgUser",
+    "userMessageText": "wheat",
+    "customMessageBg": "bgCustom",
+    "customMessageText": "steelText",
+    "customMessageLabel": "steelBright",
+
+    "toolPendingBg": "bgPending",
+    "toolSuccessBg": "bgSuccess",
+    "toolErrorBg": "bgError",
+    "toolTitle": "wheat",
+    "toolOutput": "muted",
+
+    "mdHeading": "copperHot",
+    "mdLink": "wheat",
+    "mdLinkUrl": "dim",
+    "mdCode": "steelBright",
+    "mdCodeBlock": "bodyText",
+    "mdCodeBlockBorder": "borderMuted",
+    "mdQuote": "muted",
+    "mdQuoteBorder": "steelDim",
+    "mdHr": "border",
+    "mdListBullet": "copperCore",
+
+    "toolDiffAdded": "oxide",
+    "toolDiffRemoved": "hotIron",
+    "toolDiffContext": "dim",
+
+    "syntaxComment": "wheatDeep",
+    "syntaxKeyword": "copperCore",
+    "syntaxFunction": "copperHot",
+    "syntaxVariable": "wheat",
+    "syntaxString": "steelBright",
+    "syntaxNumber": "hotIron",
+    "syntaxType": "copperDim",
+    "syntaxOperator": "muted",
+    "syntaxPunctuation": "dim",
+
+    "thinkingOff": "steelDim",
+    "thinkingMinimal": "dim",
+    "thinkingLow": "wheatDeep",
+    "thinkingMedium": "wheatAged",
+    "thinkingHigh": "copperCore",
+    "thinkingXhigh": "copperHot",
+
+    "success": "oxide",
+    "error": "hotIron",
+    "warning": "copperCore",
+    "bashMode": "copperDim"
+  },
+  "export": {
+    "pageBg": "#0b0b0c",
+    "cardBg": "#121314",
+    "infoBg": "#36180d"
+  }
+}
