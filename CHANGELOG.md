@@ -2,8 +2,8 @@
 
 ## 0.1.1
 
-- Switch Pi gallery metadata from MP4 video to PNG image preview for broader package-detail compatibility.
-- Keep MP4 demo asset in the package for manual viewing.
+- Use a GitHub raw MP4 URL as the primary Pi gallery preview, matching other video-preview Pi packages.
+- Add a PNG fallback/static preview image for README and gallery compatibility.
 
 ## 0.1.0
 

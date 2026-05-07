@@ -35,6 +35,7 @@
     "themes": [
       "./themes"
     ],
+    "video": "https://github.com/BareTread/pi-forge/raw/refs/heads/main/assets/preview.mp4",
     "image": "https://raw.githubusercontent.com/BareTread/pi-forge/main/assets/preview.png"
   },
   "peerDependencies": {

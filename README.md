@@ -6,6 +6,9 @@ Pi Forge bundles a `forge` theme with a small Forge-gated atmosphere extension. 
 
 ![Pi Forge preview](https://raw.githubusercontent.com/BareTread/pi-forge/main/assets/preview.png)
 
+Demo video:
+https://github.com/BareTread/pi-forge/raw/refs/heads/main/assets/preview.mp4
+
 ## What You Get
 
 - **Forge theme** — graphite shell, copper heat, wheat text, and cool steel contrast.
@@ -86,6 +89,7 @@ It does **not** include:
   "pi": {
     "extensions": ["./extensions"],
     "themes": ["./themes"],
+    "video": "https://github.com/BareTread/pi-forge/raw/refs/heads/main/assets/preview.mp4",
     "image": "https://raw.githubusercontent.com/BareTread/pi-forge/main/assets/preview.png"
   }
 }

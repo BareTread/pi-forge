@@ -1,13 +1,14 @@
 # Assets
 
-- `preview.png` is the Pi package gallery preview image.
-- `preview.mp4` is kept as an optional demo video in the repository/package.
+- `preview.mp4` is the primary Pi package gallery preview video.
+- `preview.png` is the fallback/static preview image and README screenshot.
 
-The package manifest currently uses the PNG preview for maximum gallery compatibility:
+The package manifest uses the same GitHub raw video URL style as other video-preview Pi packages, plus an image fallback:
 
 ```json
 {
   "pi": {
+    "video": "https://github.com/BareTread/pi-forge/raw/refs/heads/main/assets/preview.mp4",
     "image": "https://raw.githubusercontent.com/BareTread/pi-forge/main/assets/preview.png"
   }
 }
