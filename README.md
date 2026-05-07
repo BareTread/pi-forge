@@ -2,18 +2,20 @@
 
 Matte graphite, molten copper, and brushed-steel visual identity for [Pi](https://pi.dev).
 
-`pi-forge` is a visual package only. It adds the `forge` theme plus a Forge-gated atmosphere extension. It does not change prompts, tools, models, thinking level, autocomplete, or workflow.
+Pi Forge bundles a `forge` theme with a small Forge-gated atmosphere extension. It is a visual package only: no prompt templates, no custom tools, no model changes, no thinking-level changes, and no workflow changes.
+
+https://raw.githubusercontent.com/BareTread/pi-forge/main/assets/preview.mp4
 
 ## What You Get
 
-- `forge` theme: graphite shell, copper heat, wheat text, cool steel contrast.
-- Forge header: compact atelier-style session chrome.
-- Working pulse: `◇ ◇ ◆ ✦ ✦ ◆ ◇ ◇`.
-- Terminal title pulse: `⚒ ◆ ⚒ ◇` while the agent works.
-- Collapsed thinking label: `tempering…`.
-- `/forge-atmosphere [on|off]` command.
+- **Forge theme** — graphite shell, copper heat, wheat text, and cool steel contrast.
+- **Forge header** — compact atelier-style session chrome with model, cwd, and theme context.
+- **Working pulse** — diamond/spark animation: `◇ ◇ ◆ ✦ ✦ ◆ ◇ ◇`.
+- **Terminal title pulse** — `⚒ ◆ ⚒ ◇` while the agent works.
+- **Collapsed thinking label** — `tempering…`.
+- **Control command** — `/forge-atmosphere [on|off]`.
 
-Footer is untouched so packages such as `pi-powerline-footer` can keep owning it.
+The footer is intentionally untouched so packages such as `pi-powerline-footer` can keep owning it.
 
 ## Install
 
@@ -29,16 +31,10 @@ From GitHub:
 pi install git:github.com/BareTread/pi-forge
 ```
 
-From this package checkout:
+From a local checkout:
 
 ```bash
 pi install .
-```
-
-From another checkout that contains this folder:
-
-```bash
-pi install ./path/to/pi-forge
 ```
 
 Temporary test without installing:
@@ -68,23 +64,25 @@ The atmosphere extension is intentionally dormant unless the active theme is `fo
 
 ## Safety Boundary
 
-This package is visual-only:
+Pi packages can execute code, so this package keeps its extension surface deliberately narrow. Pi Forge only touches visual chrome exposed by the Pi extension API.
 
-- no prompt injection
-- no custom tools
-- no model changes
-- no thinking-level changes
-- no active-tool changes
-- no footer replacement
-- no package overrides
-- no personal settings or paths
+It does **not** include:
 
-## Package Notes
+- prompt templates
+- custom tools
+- model settings
+- thinking-level settings
+- active-tool changes
+- autocomplete changes
+- footer replacement
+- package overrides
+- personal settings or machine paths
 
-Pi packages load resources from `package.json` under the `pi` key. This package exposes:
+## Package Manifest
 
 ```json
 {
+  "keywords": ["pi-package", "pi-theme", "pi-extension", "forge"],
   "pi": {
     "extensions": ["./extensions"],
     "themes": ["./themes"],
@@ -93,7 +91,7 @@ Pi packages load resources from `package.json` under the `pi` key. This package 
 }
 ```
 
-The Pi package gallery discovers packages with the `pi-package` keyword. Because this package includes both a theme and a visual extension, the gallery lists it as `extension` + `theme`.
+Because this package includes both a theme and a visual extension, the Pi gallery lists it as `extension` + `theme`.
 
 ## Uninstall
 
@@ -101,4 +99,8 @@ The Pi package gallery discovers packages with the `pi-package` keyword. Because
 pi remove npm:@baretread/pi-forge
 ```
 
-If installed from GitHub/local path, remove that matching package source from Pi settings.
+If installed from GitHub or a local path, remove that matching package source from Pi settings.
+
+## License
+
+MIT © BareTread

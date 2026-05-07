@@ -6,8 +6,11 @@
     "pi-package",
     "pi-theme",
     "pi-extension",
+    "pi-ui",
+    "terminal-theme",
     "forge"
   ],
+  "author": "BareTread",
   "license": "MIT",
   "homepage": "https://github.com/BareTread/pi-forge#readme",
   "repository": {
