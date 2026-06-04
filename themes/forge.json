@@ -18,7 +18,7 @@
     "bodyText": "#c3bbb0",
     "textWhite": "#f5f1ea",
     "muted": "#9c9488",
-    "dim": "#5e5a53",
+    "dim": "#706b62",
     "dimmer": "#403d38",
     "dimText": "#787169",
     "commentText": "#8a744a",
@@ -34,11 +34,12 @@
 
     "steel": "#95a7ba",
     "steelText": "#b2bec8",
-    "steelDim": "#475867",
+    "steelDim": "#5a6e80",
     "steelBright": "#d2dce4",
 
     "oxide": "#789d7f",
     "oxideDeep": "#5c7c61",
+    "typePatina": "#8bb89a",
     "hotIron": "#e06a5f",
     "hotIronDeep": "#81302d"
   },
@@ -86,7 +87,7 @@
     "syntaxVariable": "wheat",
     "syntaxString": "steel",
     "syntaxNumber": "hotIron",
-    "syntaxType": "copperDim",
+    "syntaxType": "typePatina",
     "syntaxOperator": "muted",
     "syntaxPunctuation": "dimText",
 

@@ -22,21 +22,24 @@ const HIDDEN_THINKING_LABEL = "tempering…";
 const TITLE_FRAMES = ["⚒", "✦", "◆", "◇"]; // strike → spark → ember → cool
 
 const FG = {
-	steelDim: "\x1b[38;2;71;88;103m",
+	steelDim: "\x1b[38;2;90;110;128m",
 	steel: "\x1b[38;2;149;167;186m",
 	copperDim: "\x1b[38;2;160;96;58m",
 	copperCore: "\x1b[38;2;208;106;50m",
 	copperHot: "\x1b[38;2;240;151;95m",
+	copperWhite: "\x1b[38;2;255;220;174m",
 	reset: "\x1b[39m",
 };
 
 const WORKING_INDICATOR: WorkingIndicatorOptions = {
+	// Symmetric ember ramp that flashes white-hot at the strike, then cools.
 	frames: [
 		color("◇", FG.steelDim),
 		color("◇", FG.steel),
 		color("◆", FG.copperDim),
 		color("◆", FG.copperCore),
 		color("✦", FG.copperHot),
+		color("✦", FG.copperWhite),
 		color("✦", FG.copperHot),
 		color("◆", FG.copperCore),
 		color("◆", FG.copperDim),
@@ -168,7 +171,7 @@ export default function (pi: ExtensionAPI) {
 			const frame = TITLE_FRAMES[titleFrame % TITLE_FRAMES.length];
 			ctx.ui.setTitle(`${frame} ${forgeTitle(pi, ctx)}`);
 			titleFrame++;
-		}, 160);
+		}, 280);
 	}
 
 	function applyOn(ctx: ExtensionContext): void {

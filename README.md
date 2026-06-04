@@ -13,7 +13,7 @@ https://github.com/BareTread/pi-forge/raw/refs/heads/main/assets/preview.mp4
 
 - **Forge theme** — graphite shell, copper heat, wheat text, and cool steel contrast.
 - **Forge header** — compact atelier-style session chrome with model, cwd, and theme context.
-- **Working pulse** — diamond/spark animation: `◇ ◇ ◆ ◆ ✦ ✦ ◆ ◆ ◇ ◇`.
+- **Working pulse** — diamond/spark animation that flashes white-hot at the strike: `◇ ◇ ◆ ◆ ✦ ✦ ✦ ◆ ◆ ◇ ◇`.
 - **Terminal title pulse** — `⚒ ✦ ◆ ◇` while the agent works.
 - **Collapsed thinking label** — `tempering…`.
 - **Control command** — `/forge-atmosphere [on|off]`.
