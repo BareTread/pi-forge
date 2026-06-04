@@ -5,7 +5,7 @@
 - Give types their own hue: `syntaxType` moves off the copper trio to a new `typePatina` (#8bb89a) — oxidized-copper green, kept distinct from the diff-added/success `oxide` so types finally separate from copper keywords and functions.
 - Lift the genuinely-faint tiers for legibility: `steelDim` (#475867 → #5a6e80) so footer `think:off` and quote borders are readable, and `dim` (#5e5a53 → #706b62) so header labels and minimal-thinking text are no longer near-invisible.
 - Punch up the working pulse: the ember now flashes white-hot at the strike — an 11-frame ramp with a new `copperWhite` peak (`◇ ◇ ◆ ◆ ✦ ✦ ✦ ◆ ◆ ◇ ◇`) — instead of topping out at the same copper twice.
-- Slow the terminal-title pulse to a deliberate hammer beat (160ms → 280ms) so it reads as a forge strike, not a flicker.
+- Rebuild the terminal-title pulse around a fixed `⚒` anchor: instead of the hammer rotating in and out among the spark glyphs (which read as a random flicker), the hammer now stays put and only the spark beside it animates — strike → ember → cool → a held rest beat — at a slower, deliberate 300ms cadence.
 - Visual-only refinements; no prompts, tools, model, thinking, or workflow changes.
 
 ## 0.2.0

@@ -19,7 +19,9 @@ import type {
 
 const ACTIVE_THEME = "forge";
 const HIDDEN_THINKING_LABEL = "tempering…";
-const TITLE_FRAMES = ["⚒", "✦", "◆", "◇"]; // strike → spark → ember → cool
+// The hammer is a fixed anchor; only the spark beside it animates, so the
+// title never flickers or shifts. Strike → ember → cool → a held rest beat.
+const TITLE_FRAMES = ["⚒ ✦", "⚒ ◆", "⚒ ◇", "⚒ ·", "⚒ ·", "⚒ ·"];
 
 const FG = {
 	steelDim: "\x1b[38;2;90;110;128m",
@@ -171,7 +173,7 @@ export default function (pi: ExtensionAPI) {
 			const frame = TITLE_FRAMES[titleFrame % TITLE_FRAMES.length];
 			ctx.ui.setTitle(`${frame} ${forgeTitle(pi, ctx)}`);
 			titleFrame++;
-		}, 280);
+		}, 300);
 	}
 
 	function applyOn(ctx: ExtensionContext): void {
