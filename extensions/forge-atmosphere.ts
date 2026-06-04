@@ -19,7 +19,7 @@ import type {
 
 const ACTIVE_THEME = "forge";
 const HIDDEN_THINKING_LABEL = "tempering…";
-const TITLE_FRAMES = ["⚒", "◆", "⚒", "◇"];
+const TITLE_FRAMES = ["⚒", "✦", "◆", "◇"]; // strike → spark → ember → cool
 
 const FG = {
 	steelDim: "\x1b[38;2;71;88;103m",
@@ -35,13 +35,15 @@ const WORKING_INDICATOR: WorkingIndicatorOptions = {
 		color("◇", FG.steelDim),
 		color("◇", FG.steel),
 		color("◆", FG.copperDim),
-		color("✦", FG.copperCore),
+		color("◆", FG.copperCore),
+		color("✦", FG.copperHot),
 		color("✦", FG.copperHot),
 		color("◆", FG.copperCore),
-		color("◇", FG.copperDim),
+		color("◆", FG.copperDim),
 		color("◇", FG.steel),
+		color("◇", FG.steelDim),
 	],
-	intervalMs: 90,
+	intervalMs: 80,
 };
 
 function color(text: string, ansi: string): string {
@@ -166,7 +168,7 @@ export default function (pi: ExtensionAPI) {
 			const frame = TITLE_FRAMES[titleFrame % TITLE_FRAMES.length];
 			ctx.ui.setTitle(`${frame} ${forgeTitle(pi, ctx)}`);
 			titleFrame++;
-		}, 100);
+		}, 160);
 	}
 
 	function applyOn(ctx: ExtensionContext): void {

@@ -20,6 +20,8 @@
     "muted": "#9c9488",
     "dim": "#5e5a53",
     "dimmer": "#403d38",
+    "dimText": "#787169",
+    "commentText": "#8a744a",
 
     "copperCore": "#d06a32",
     "copperHot": "#f0975f",
@@ -65,7 +67,7 @@
 
     "mdHeading": "copperHot",
     "mdLink": "wheat",
-    "mdLinkUrl": "dim",
+    "mdLinkUrl": "dimText",
     "mdCode": "steelBright",
     "mdCodeBlock": "bodyText",
     "mdCodeBlockBorder": "borderMuted",
@@ -76,17 +78,17 @@
 
     "toolDiffAdded": "oxide",
     "toolDiffRemoved": "hotIron",
-    "toolDiffContext": "dim",
+    "toolDiffContext": "dimText",
 
-    "syntaxComment": "wheatDeep",
+    "syntaxComment": "commentText",
     "syntaxKeyword": "copperCore",
     "syntaxFunction": "copperHot",
     "syntaxVariable": "wheat",
-    "syntaxString": "steelBright",
+    "syntaxString": "steel",
     "syntaxNumber": "hotIron",
     "syntaxType": "copperDim",
     "syntaxOperator": "muted",
-    "syntaxPunctuation": "dim",
+    "syntaxPunctuation": "dimText",
 
     "thinkingOff": "steelDim",
     "thinkingMinimal": "dim",
