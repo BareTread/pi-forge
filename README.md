@@ -2,23 +2,22 @@
 
 Matte graphite, molten copper, and brushed-steel visual identity for [Pi](https://pi.dev).
 
-Pi Forge bundles a `forge` theme with a small Forge-gated atmosphere extension. It is a visual package only: no prompt templates, no custom tools, no model changes, no thinking-level changes, and no workflow changes.
-
-![Pi Forge preview](https://raw.githubusercontent.com/BareTread/pi-forge/main/assets/preview.png)
-
-Demo video:
-https://github.com/BareTread/pi-forge/raw/refs/heads/main/assets/preview.mp4
+`pi-forge` is a visual package only. It adds the `forge` theme plus a Forge-gated atmosphere extension. It does not change prompts, tools, models, thinking level, autocomplete, or workflow.
 
 ## What You Get
 
-- **Forge theme** — graphite shell, copper heat, wheat text, and cool steel contrast.
-- **Forge header** — compact atelier-style session chrome with model, cwd, and theme context.
-- **Working pulse** — diamond/spark animation: `◇ ◇ ◆ ✦ ✦ ◆ ◇ ◇`.
-- **Terminal title pulse** — `⚒ ◆ ⚒ ◇` while the agent works.
-- **Collapsed thinking label** — `tempering…`.
-- **Control command** — `/forge-atmosphere [on|off]`.
+One temperature system — cold iron → graphite → copper → white-hot — drives every animated surface, with one rule: **strike fast, cool slow**.
 
-The footer is intentionally untouched so packages such as `pi-powerline-footer` can keep owning it.
+- `forge` theme: graphite shell, copper heat, wheat text, cool steel contrast.
+- Ignition header: the π maker's-mark heats from cold graphite to a white-hot strike on session start, then settles into its resting gradient (~1.2s, then the timer stops — zero idle cost).
+- Heat line: a stepped copper hairline under the wordmark, hot at the left and cooling to the right.
+- Asymmetric working ember: 4 fast frames up to white-hot, 7 slow frames cooling through copper into steel, 3 cold rest beats.
+- Forging vocabulary: the working message walks a real forging sequence one stage per turn — `heating the stock…` → `drawing out…` → `upsetting…` → … → `quenching…`.
+- Terminal title pulse: fixed `⚒` anchor with an animating spark — strike → ember → cool → rest.
+- Collapsed thinking label: `tempering…`.
+- `/forge-atmosphere [on|off]` command (`on` re-runs the ignition).
+
+Footer is untouched so packages such as `pi-powerline-footer` can keep owning it.
 
 ## Install
 
@@ -34,10 +33,16 @@ From GitHub:
 pi install git:github.com/BareTread/pi-forge
 ```
 
-From a local checkout:
+From this package checkout:
 
 ```bash
 pi install .
+```
+
+From another checkout that contains this folder:
+
+```bash
+pi install ./path/to/pi-forge
 ```
 
 Temporary test without installing:
@@ -67,35 +72,33 @@ The atmosphere extension is intentionally dormant unless the active theme is `fo
 
 ## Safety Boundary
 
-Pi packages can execute code, so this package keeps its extension surface deliberately narrow. Pi Forge only touches visual chrome exposed by the Pi extension API.
+This package is visual-only:
 
-It does **not** include:
+- no prompt injection
+- no custom tools
+- no model changes
+- no thinking-level changes
+- no active-tool changes
+- no footer replacement
+- no package overrides
+- no personal settings or paths
 
-- prompt templates
-- custom tools
-- model settings
-- thinking-level settings
-- active-tool changes
-- autocomplete changes
-- footer replacement
-- package overrides
-- personal settings or machine paths
+## Package Notes
 
-## Package Manifest
+Pi packages load resources from `package.json` under the `pi` key. This package exposes:
 
 ```json
 {
-  "keywords": ["pi-package", "pi-theme", "pi-extension", "forge"],
   "pi": {
     "extensions": ["./extensions"],
     "themes": ["./themes"],
-    "video": "https://github.com/BareTread/pi-forge/raw/refs/heads/main/assets/preview.mp4",
-    "image": "https://raw.githubusercontent.com/BareTread/pi-forge/main/assets/preview.png"
+    "video": "https://unpkg.com/@baretread/pi-forge@0.4.1/assets/preview.mp4",
+    "image": "https://unpkg.com/@baretread/pi-forge@0.4.1/assets/preview.png"
   }
 }
 ```
 
-Because this package includes both a theme and a visual extension, the Pi gallery lists it as `extension` + `theme`.
+The Pi package gallery discovers packages with the `pi-package` keyword. Video takes precedence over the static image fallback.
 
 ## Uninstall
 
@@ -103,8 +106,4 @@ Because this package includes both a theme and a visual extension, the Pi galler
 pi remove npm:@baretread/pi-forge
 ```
 
-If installed from GitHub or a local path, remove that matching package source from Pi settings.
-
-## License
-
-MIT © BareTread
+If installed from GitHub/local path, remove that matching package source from Pi settings.
