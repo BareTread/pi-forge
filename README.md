@@ -9,11 +9,11 @@ Matte graphite, molten copper, and brushed-steel visual identity for [Pi](https:
 One temperature system — cold iron → graphite → copper → white-hot — drives every animated surface, with one rule: **strike fast, cool slow**.
 
 - `forge` theme: graphite shell, copper heat, wheat text, cool steel contrast.
-- Ignition header: the π maker's-mark heats from cold graphite to a white-hot strike on session start, then settles into its resting gradient (~1.2s, then the timer stops — zero idle cost).
+- Ignition header: the π maker's-mark heats from cold graphite to a white-hot strike on session start, then settles into its resting gradient beneath the `heat · hammer · hold` tagline (~1.2s, then the timer stops — zero idle cost).
 - Heat line: a stepped copper hairline under the wordmark, hot at the left and cooling to the right.
 - Asymmetric working ember: 4 fast frames up to white-hot, 7 slow frames cooling through copper into steel, 3 cold rest beats.
 - Forging vocabulary: the working message walks a real forging sequence one stage per turn — `heating the stock…` → `drawing out…` → `upsetting…` → … → `quenching…`.
-- Terminal title pulse: fixed `⚒` anchor with an animating spark — strike → ember → cool → rest.
+- Terminal title pulse: fixed `⚒` anchor with an animating spark — strike → ember → cool — then a two-beat quench settle on agent end.
 - Collapsed thinking label: `tempering…`.
 - `/forge-atmosphere [on|off]` command (`on` re-runs the ignition).
 

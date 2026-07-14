@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.5.0
+
+- Resolve the terminal title through a two-beat quench on agent end before settling at clean rest.
+- Move syntax numbers from error-red hot iron to their own white-hot peak.
+- Move Markdown links from wheat to cool steel.
+- Rename the header tagline to `heat · hammer · hold`, naming the motion curve.
+
 ## 0.4.1
 
 - Replace the package gallery demo with the new npm-hosted MP4 preview and generated PNG fallback.

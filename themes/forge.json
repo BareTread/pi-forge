@@ -40,6 +40,7 @@
     "oxide": "#789d7f",
     "oxideDeep": "#5c7c61",
     "typePatina": "#8bb89a",
+    "whiteHot": "#ffdcae",
     "hotIron": "#e06a5f",
     "hotIronDeep": "#81302d"
   },
@@ -67,7 +68,7 @@
     "toolOutput": "muted",
 
     "mdHeading": "copperHot",
-    "mdLink": "wheat",
+    "mdLink": "steel",
     "mdLinkUrl": "dimText",
     "mdCode": "steelBright",
     "mdCodeBlock": "bodyText",
@@ -86,7 +87,7 @@
     "syntaxFunction": "copperHot",
     "syntaxVariable": "wheat",
     "syntaxString": "steel",
-    "syntaxNumber": "hotIron",
+    "syntaxNumber": "whiteHot",
     "syntaxType": "typePatina",
     "syntaxOperator": "muted",
     "syntaxPunctuation": "dimText",

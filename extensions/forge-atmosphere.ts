@@ -9,7 +9,8 @@
  * Design language: metal under heat. A single temperature ramp (cold iron →
  * white-hot) and a single easing curve (fast strike, slow cool) drive every
  * animated surface — the ignition header, the working ember, the title pulse —
- * so all motion reads as one material responding to one fire.
+ * so all motion reads as one material responding to one fire: ignition → strike
+ * → quench.
  */
 
 import { readFileSync } from "node:fs";
@@ -25,8 +26,10 @@ import type {
 const ACTIVE_THEME = "forge";
 const HIDDEN_THINKING_LABEL = "tempering…";
 // The hammer is a fixed anchor; only the spark beside it animates, so the
-// title never flickers or shifts. Strike → ember → cool → a held rest beat.
+// title never flickers or shifts. Ignition → strike → quench ends at clean rest.
 const TITLE_FRAMES = ["⚒ ✦", "⚒ ◆", "⚒ ◇", "⚒ ·", "⚒ ·", "⚒ ·"];
+const QUENCH_FRAMES = ["⚒ ◇", "⚒ ·"] as const;
+const QUENCH_INTERVAL_MS = 350;
 
 // The working message walks a real forging sequence, one stage per turn.
 // "tempering…" is reserved for the collapsed-thinking label.
@@ -229,7 +232,7 @@ function forgeHeader(ctx: ExtensionContext, theme: Theme, offset: number, width:
 		...glyphLines(offset, theme),
 		"",
 		`   ${theme.bold(ember(4 + offset, "pi · forge"))}`,
-		`   ${theme.fg("muted", "matte systems atelier")}`,
+		`   ${theme.fg("muted", "heat · hammer · hold")}`,
 		heatLine(offset, width),
 		row(theme, "model", shortModel(ctx), "accent"),
 		row(theme, "cwd", cwdName(ctx), "text"),
@@ -292,14 +295,35 @@ export default function (pi: ExtensionAPI) {
 	}
 
 	function startTitleSpinner(ctx: ExtensionContext): void {
+		stopTitleSpinner(ctx, enabled ? forgeTitle(pi, ctx) : vanillaTitle(pi, ctx));
 		if (!enabled || !ctx.hasUI || !supports(ctx.ui, "setTitle")) return;
 		lastContext = ctx;
-		stopTitleSpinner(ctx, forgeTitle(pi, ctx));
 		titleTimer = setInterval(() => {
 			const frame = TITLE_FRAMES[titleFrame % TITLE_FRAMES.length];
 			ctx.ui.setTitle(`${frame} ${forgeTitle(pi, ctx)}`);
 			titleFrame++;
 		}, 300);
+	}
+
+	function playTitleQuench(ctx: ExtensionContext): void {
+		const canQuench = enabled && ctx.hasUI && supports(ctx.ui, "setTitle");
+		stopTitleSpinner(ctx, canQuench ? `${QUENCH_FRAMES[0]} ${forgeTitle(pi, ctx)}` : undefined);
+		if (!canQuench) return;
+		lastContext = ctx;
+		let frame = 1;
+
+		// A strike is sudden; cooling is not. Resolve through two held beats.
+		const advanceQuench = () => {
+			if (frame < QUENCH_FRAMES.length) {
+				ctx.ui.setTitle(`${QUENCH_FRAMES[frame]} ${forgeTitle(pi, ctx)}`);
+				frame++;
+				titleTimer = setTimeout(advanceQuench, QUENCH_INTERVAL_MS);
+				return;
+			}
+			titleTimer = undefined;
+			ctx.ui.setTitle(forgeTitle(pi, ctx));
+		};
+		titleTimer = setTimeout(advanceQuench, QUENCH_INTERVAL_MS);
 	}
 
 	function applyOn(ctx: ExtensionContext): void {
@@ -357,7 +381,7 @@ export default function (pi: ExtensionAPI) {
 	});
 
 	pi.on("agent_end", async (_event, ctx) => {
-		if (enabled) stopTitleSpinner(ctx, forgeTitle(pi, ctx));
+		if (enabled) playTitleQuench(ctx);
 	});
 
 	pi.on("session_shutdown", async (_event, ctx) => {
