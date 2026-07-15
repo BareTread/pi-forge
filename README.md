@@ -100,6 +100,14 @@ Pi packages load resources from `package.json` under the `pi` key. This package 
 
 The Pi package gallery discovers packages with the `pi-package` keyword. Video takes precedence over the static image fallback.
 
+## Troubleshooting
+
+**Washed-out or oversaturated colors over SSH.** Pi's colors go through chalk 5, which quantizes to 256 colors when `COLORTERM` is unset — and SSH does not forward it. Fix on the remote shell:
+
+```bash
+export COLORTERM=truecolor
+```
+
 ## Uninstall
 
 ```bash

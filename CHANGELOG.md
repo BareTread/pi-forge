@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.6.0
+
+- Scale the heat-track ember ramp ceiling and cool rate with the session's thinking level (via `thinking_level_select` / `getThinkingLevel`).
+- Add an error-hiss title-only beat on turn-level failure (error/aborted) — no widget, no layout claim.
+- Detect COLORTERM/TERM and fall back to nearest xterm-256 for the ember ramp so truecolor colors stay correct in 256-color terminals.
+- Document the SSH washed-out-colors fix (`export COLORTERM=truecolor`) in the README.
+
 ## 0.5.0
 
 - Resolve the terminal title through a two-beat quench on agent end before settling at clean rest.

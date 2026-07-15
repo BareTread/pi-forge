@@ -1,6 +1,6 @@
 {
   "name": "@baretread/pi-forge",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Matte graphite, molten copper Forge theme and visual atmosphere for Pi.",
   "keywords": [
     "pi-package",
@@ -35,8 +35,8 @@
     "themes": [
       "./themes"
     ],
-    "video": "https://unpkg.com/@baretread/pi-forge@0.5.0/assets/preview.mp4",
-    "image": "https://unpkg.com/@baretread/pi-forge@0.5.0/assets/preview.png"
+    "video": "https://unpkg.com/@baretread/pi-forge@0.6.0/assets/preview.mp4",
+    "image": "https://unpkg.com/@baretread/pi-forge@0.6.0/assets/preview.png"
   },
   "peerDependencies": {
     "@mariozechner/pi-coding-agent": "*"

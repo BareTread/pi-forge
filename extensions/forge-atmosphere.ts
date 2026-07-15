@@ -16,7 +16,9 @@
 import { readFileSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import type { ThinkingLevel } from "@mariozechner/pi-agent-core";
 import type {
+	AgentEndEvent,
 	ExtensionAPI,
 	ExtensionContext,
 	Theme,
@@ -25,11 +27,6 @@ import type {
 
 const ACTIVE_THEME = "forge";
 const HIDDEN_THINKING_LABEL = "tempering…";
-// The hammer is a fixed anchor; only the spark beside it animates, so the
-// title never flickers or shifts. Ignition → strike → quench ends at clean rest.
-const TITLE_FRAMES = ["⚒ ✦", "⚒ ◆", "⚒ ◇", "⚒ ·", "⚒ ·", "⚒ ·"];
-const QUENCH_FRAMES = ["⚒ ◇", "⚒ ·"] as const;
-const QUENCH_INTERVAL_MS = 350;
 
 // The working message walks a real forging sequence, one stage per turn.
 // "tempering…" is reserved for the collapsed-thinking label.
@@ -49,17 +46,28 @@ const FORGE_STAGES = [
 // resting temperature; animation only shifts that temperature up or down the
 // same ramp, which is what keeps the motion cohesive.
 
-const EMBER = [
-	"\x1b[38;2;64;61;56m", // 0 cold iron
-	"\x1b[38;2;94;82;68m", // 1 warming graphite
-	"\x1b[38;2;95;50;28m", // 2 deep copper
-	"\x1b[38;2;160;96;58m", // 3 dim copper
-	"\x1b[38;2;208;106;50m", // 4 copper core
-	"\x1b[38;2;240;151;95m", // 5 hot copper
-	"\x1b[38;2;255;220;174m", // 6 white-hot
+const EMBER_RGB = [
+	[64, 61, 56], // 0 cold iron
+	[94, 82, 68], // 1 warming graphite
+	[95, 50, 28], // 2 deep copper
+	[160, 96, 58], // 3 dim copper
+	[208, 106, 50], // 4 copper core
+	[240, 151, 95], // 5 hot copper
+	[255, 220, 174], // 6 white-hot
 ] as const;
+const EMBER_256 = [237, 239, 237, 131, 167, 209, 223] as const;
 
-const STEEL_DIM = "\x1b[38;2;90;110;128m";
+function hasTruecolor(): boolean {
+	const colorTerm = process.env.COLORTERM?.toLowerCase();
+	if (colorTerm === "truecolor" || colorTerm === "24bit") return true;
+	return /(?:direct|truecolor|24bit|kitty|wezterm|alacritty|ghostty|foot)/i.test(process.env.TERM ?? "");
+}
+
+const TRUECOLOR = hasTruecolor();
+const EMBER = EMBER_RGB.map(([r, g, b], index) =>
+	TRUECOLOR ? `\x1b[38;2;${r};${g};${b}m` : `\x1b[38;5;${EMBER_256[index]}m`,
+);
+const STEEL_DIM = TRUECOLOR ? "\x1b[38;2;90;110;128m" : "\x1b[38;5;60m";
 const RESET = "\x1b[39m";
 
 function color(text: string, ansi: string): string {
@@ -72,28 +80,54 @@ function ember(temp: number, text: string): string {
 }
 
 // ─── Working ember ──────────────────────────────────────────────────────────
-// Asymmetric by design: 4 frames up, 7 frames down, 3 cold rest beats.
-// A strike is sudden; cooling is not.
+// One asymmetric curve for every working surface: strike fast, cool slow, rest.
+// Thinking level changes only its amplitude and duration.
 
-const WORKING_INDICATOR: WorkingIndicatorOptions = {
-	frames: [
-		ember(0, "·"), // cold rest
-		color("◇", STEEL_DIM), // first light
-		ember(4, "◆"), // heat rises fast
-		ember(5, "✦"), // strike
-		ember(6, "✦"), // white-hot peak
-		ember(5, "✦"), // the long cool begins
-		ember(4, "◆"),
-		ember(4, "◆"),
-		ember(3, "◆"),
-		ember(3, "◇"),
-		color("◇", STEEL_DIM),
-		color("·", STEEL_DIM),
-		ember(1, "·"),
-		ember(0, "·"), // back to cold iron
-	],
-	intervalMs: 90,
-};
+const HEAT_CURVE = [0, 1, 4, 5, 6, 5, 4, 4, 3, 3, 1, 0, 0, 0] as const;
+const HEAT_PROFILES = {
+	off: { ceiling: 0, intervalMs: 70 },
+	minimal: { ceiling: 2, intervalMs: 70 },
+	low: { ceiling: 3, intervalMs: 75 },
+	medium: { ceiling: 4, intervalMs: 90 },
+	high: { ceiling: 5, intervalMs: 105 },
+	xhigh: { ceiling: 6, intervalMs: 120 },
+	max: { ceiling: 6, intervalMs: 120 },
+} as const;
+
+type HeatProfile = (typeof HEAT_PROFILES)[keyof typeof HEAT_PROFILES];
+
+function heatProfile(level: ThinkingLevel): HeatProfile {
+	return HEAT_PROFILES[level];
+}
+
+function scaledTemp(sourceTemp: number, profile: HeatProfile): number {
+	return Math.round((sourceTemp * profile.ceiling) / (EMBER.length - 1));
+}
+
+function heatGlyph(sourceTemp: number, profile: HeatProfile): string {
+	if (profile.ceiling === 0) return sourceTemp >= 3 ? "◇" : "·";
+	const temp = scaledTemp(sourceTemp, profile);
+	return temp >= 5 ? "✦" : temp >= 3 ? "◆" : temp >= 1 ? "◇" : "·";
+}
+
+function workingIndicator(level: ThinkingLevel): WorkingIndicatorOptions {
+	const profile = heatProfile(level);
+	return {
+		frames: HEAT_CURVE.map((temp) => {
+			const glyph = heatGlyph(temp, profile);
+			return profile.ceiling === 0 ? color(glyph, STEEL_DIM) : ember(scaledTemp(temp, profile), glyph);
+		}),
+		intervalMs: profile.intervalMs,
+	};
+}
+
+function titleFrames(profile: HeatProfile): string[] {
+	return HEAT_CURVE.map((temp) => `⚒ ${heatGlyph(temp, profile)}`);
+}
+
+const ERROR_HISS_FRAMES = ["⚒ ✦", "⚒ ◇"] as const;
+const STEEL_REST_FRAME = "⚒ ·";
+const ERROR_HISS_INTERVAL_MS = 120;
 
 // ─── Ignition ───────────────────────────────────────────────────────────────
 // Temperature offsets applied to every glowing header element on session
@@ -245,45 +279,66 @@ function forgeHeader(ctx: ExtensionContext, theme: Theme, offset: number, width:
 // Structural subset of the TUI instance — all the header needs to animate.
 type RenderHost = { requestRender(): void };
 
-function ignitionHeaderFactory(ctx: ExtensionContext) {
-	return (tui: RenderHost, theme: Theme) => {
-		let step = 0;
-		let timer: ReturnType<typeof setInterval> | undefined = setInterval(() => {
-			step++;
-			if (step >= IGNITION.length - 1) {
-				step = IGNITION.length - 1;
-				clearInterval(timer);
-				timer = undefined;
-			}
-			tui.requestRender();
-		}, IGNITION_INTERVAL_MS);
-
-		return {
-			render: (width: number) => forgeHeader(ctx, theme, IGNITION[step], width),
-			invalidate() {},
-			dispose() {
-				if (timer) clearInterval(timer);
-				timer = undefined;
-			},
-		};
-	};
-}
-
 function supports(target: object, key: string): boolean {
 	return key in target && typeof (target as Record<string, unknown>)[key] === "function";
+}
+
+function agentAborted(messages: AgentEndEvent["messages"]): boolean {
+	return messages.some(
+		(message) => message.role === "assistant" && (message.stopReason === "error" || message.stopReason === "aborted"),
+	);
 }
 
 export default function (pi: ExtensionAPI) {
 	if (getActiveTheme() !== ACTIVE_THEME) return;
 
 	let enabled = true;
+	let ignitionTimer: ReturnType<typeof setInterval> | undefined;
+	let ignitionStep = IGNITION.length - 1;
+	let ignitionHost: RenderHost | undefined;
 	let titleTimer: ReturnType<typeof setInterval> | undefined;
 	let titleFrame = 0;
 	let forgeStage = 0;
 	let lastContext: ExtensionContext | undefined;
 
+	function stopIgnition(settle = false): void {
+		if (ignitionTimer !== undefined) {
+			clearInterval(ignitionTimer);
+			ignitionTimer = undefined;
+		}
+		if (settle && ignitionHost && ignitionStep !== IGNITION.length - 1) {
+			ignitionStep = IGNITION.length - 1;
+			ignitionHost.requestRender();
+		}
+		ignitionHost = undefined;
+	}
+
+	function ignitionHeaderFactory(ctx: ExtensionContext) {
+		return (tui: RenderHost, theme: Theme) => {
+			stopIgnition();
+			ignitionStep = 0;
+			ignitionHost = tui;
+			ignitionTimer = setInterval(() => {
+				ignitionStep++;
+				if (ignitionStep >= IGNITION.length - 1) {
+					ignitionStep = IGNITION.length - 1;
+					stopIgnition();
+				}
+				tui.requestRender();
+			}, IGNITION_INTERVAL_MS);
+
+			return {
+				render: (width: number) => forgeHeader(ctx, theme, IGNITION[ignitionStep], width),
+				invalidate() {},
+				dispose() {
+					stopIgnition();
+				},
+			};
+		};
+	}
+
 	function stopTitleSpinner(ctx?: ExtensionContext, title?: string): void {
-		if (titleTimer) {
+		if (titleTimer !== undefined) {
 			clearInterval(titleTimer);
 			titleTimer = undefined;
 		}
@@ -298,32 +353,55 @@ export default function (pi: ExtensionAPI) {
 		stopTitleSpinner(ctx, enabled ? forgeTitle(pi, ctx) : vanillaTitle(pi, ctx));
 		if (!enabled || !ctx.hasUI || !supports(ctx.ui, "setTitle")) return;
 		lastContext = ctx;
+		const profile = heatProfile(pi.getThinkingLevel());
+		const frames = titleFrames(profile);
+		ctx.ui.setTitle(`${frames[0]} ${forgeTitle(pi, ctx)}`);
+		titleFrame = 1;
 		titleTimer = setInterval(() => {
-			const frame = TITLE_FRAMES[titleFrame % TITLE_FRAMES.length];
-			ctx.ui.setTitle(`${frame} ${forgeTitle(pi, ctx)}`);
+			ctx.ui.setTitle(`${frames[titleFrame % frames.length]} ${forgeTitle(pi, ctx)}`);
 			titleFrame++;
-		}, 300);
+		}, profile.intervalMs * 2);
 	}
 
-	function playTitleQuench(ctx: ExtensionContext): void {
-		const canQuench = enabled && ctx.hasUI && supports(ctx.ui, "setTitle");
-		stopTitleSpinner(ctx, canQuench ? `${QUENCH_FRAMES[0]} ${forgeTitle(pi, ctx)}` : undefined);
-		if (!canQuench) return;
+	function playTitleSequence(
+		ctx: ExtensionContext,
+		frames: readonly string[],
+		intervalMs: number,
+		restFrame?: string,
+	): void {
+		const canPlay = enabled && ctx.hasUI && supports(ctx.ui, "setTitle");
+		stopTitleSpinner(ctx, canPlay ? `${frames[0]} ${forgeTitle(pi, ctx)}` : undefined);
+		if (!canPlay) return;
 		lastContext = ctx;
 		let frame = 1;
 
-		// A strike is sudden; cooling is not. Resolve through two held beats.
-		const advanceQuench = () => {
-			if (frame < QUENCH_FRAMES.length) {
-				ctx.ui.setTitle(`${QUENCH_FRAMES[frame]} ${forgeTitle(pi, ctx)}`);
+		const advance = () => {
+			if (frame < frames.length) {
+				ctx.ui.setTitle(`${frames[frame]} ${forgeTitle(pi, ctx)}`);
 				frame++;
-				titleTimer = setTimeout(advanceQuench, QUENCH_INTERVAL_MS);
+				titleTimer = setTimeout(advance, intervalMs);
 				return;
 			}
 			titleTimer = undefined;
-			ctx.ui.setTitle(forgeTitle(pi, ctx));
+			ctx.ui.setTitle(restFrame ? `${restFrame} ${forgeTitle(pi, ctx)}` : forgeTitle(pi, ctx));
 		};
-		titleTimer = setTimeout(advanceQuench, QUENCH_INTERVAL_MS);
+		titleTimer = setTimeout(advance, intervalMs);
+	}
+
+	function playTitleQuench(ctx: ExtensionContext): void {
+		const profile = heatProfile(pi.getThinkingLevel());
+		const frames = HEAT_CURVE.slice(8, 12).map((temp) => `⚒ ${heatGlyph(temp, profile)}`);
+		playTitleSequence(ctx, frames, profile.intervalMs * 2);
+	}
+
+	function playErrorHiss(ctx: ExtensionContext): void {
+		playTitleSequence(ctx, ERROR_HISS_FRAMES, ERROR_HISS_INTERVAL_MS, STEEL_REST_FRAME);
+	}
+
+	function applyWorkingIndicator(ctx: ExtensionContext, level = pi.getThinkingLevel()): void {
+		if (enabled && ctx.hasUI && supports(ctx.ui, "setWorkingIndicator")) {
+			ctx.ui.setWorkingIndicator(workingIndicator(level));
+		}
 	}
 
 	function applyOn(ctx: ExtensionContext): void {
@@ -334,9 +412,7 @@ export default function (pi: ExtensionAPI) {
 		if (supports(ctx.ui, "setHeader")) {
 			ctx.ui.setHeader(ignitionHeaderFactory(ctx));
 		}
-		if (supports(ctx.ui, "setWorkingIndicator")) {
-			ctx.ui.setWorkingIndicator(WORKING_INDICATOR);
-		}
+		applyWorkingIndicator(ctx);
 		if (supports(ctx.ui, "setHiddenThinkingLabel")) {
 			ctx.ui.setHiddenThinkingLabel(HIDDEN_THINKING_LABEL);
 		}
@@ -347,6 +423,7 @@ export default function (pi: ExtensionAPI) {
 
 	function applyOff(ctx?: ExtensionContext): void {
 		enabled = false;
+		stopIgnition();
 		const activeCtx = ctx || lastContext;
 		stopTitleSpinner(activeCtx, activeCtx ? vanillaTitle(pi, activeCtx) : undefined);
 		if (!activeCtx?.hasUI) return;
@@ -373,6 +450,8 @@ export default function (pi: ExtensionAPI) {
 	});
 
 	pi.on("agent_start", async (_event, ctx) => {
+		stopIgnition(true);
+		applyWorkingIndicator(ctx);
 		startTitleSpinner(ctx);
 		if (enabled && ctx.hasUI && supports(ctx.ui, "setWorkingMessage")) {
 			ctx.ui.setWorkingMessage(FORGE_STAGES[forgeStage % FORGE_STAGES.length]);
@@ -380,8 +459,15 @@ export default function (pi: ExtensionAPI) {
 		}
 	});
 
-	pi.on("agent_end", async (_event, ctx) => {
-		if (enabled) playTitleQuench(ctx);
+	pi.on("thinking_level_select", async (event, ctx) => {
+		applyWorkingIndicator(ctx, event.level);
+		if (enabled && !ctx.isIdle()) startTitleSpinner(ctx);
+	});
+
+	pi.on("agent_end", async (event, ctx) => {
+		if (!enabled) return;
+		if (agentAborted(event.messages)) playErrorHiss(ctx);
+		else playTitleQuench(ctx);
 	});
 
 	pi.on("session_shutdown", async (_event, ctx) => {
