@@ -31,13 +31,16 @@ const HIDDEN_THINKING_LABEL = "tempering…";
 // The working message walks a real forging sequence, one stage per turn.
 // "tempering…" is reserved for the collapsed-thinking label.
 const FORGE_STAGES = [
-	"heating the stock…",
+	"kindling…",
+	"stoking the forge…",
+	"bringing to heat…",
+	"striking…",
 	"drawing out…",
-	"upsetting…",
-	"punching…",
+	"hammering…",
 	"shaping…",
 	"planishing…",
-	"annealing…",
+	"honing…",
+	"burnishing…",
 	"quenching…",
 ];
 
